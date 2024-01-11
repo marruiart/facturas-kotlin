@@ -4,6 +4,7 @@
     <!-- Invoice list -->
     <string name="invoices_list_title">Invoices</string>
     <string name="invoices_list_toolbar_back">Consumption</string>
+    <string name="invoices_list_empty">No invoice found</string>
     <!-- Invoice list item -->
     <string name="invoice_item_paid">Paid</string>
     <string name="invoice_item_cancelled">Cancelled</string>

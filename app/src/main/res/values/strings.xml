@@ -3,6 +3,7 @@
     <!-- Invoice list -->
     <string name="invoices_list_title">Facturas</string>
     <string name="invoices_list_toolbar_back">Consumo</string>
+    <string name="invoices_list_empty">No se han encontrado facturas</string>
     <!-- Invoice list item -->
     <string name="invoice_item_paid">Pagada</string>
     <string name="invoice_item_cancelled">Anulada</string>
