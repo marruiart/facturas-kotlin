@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/invoicesListFragment">
+
+    <fragment
+        android:id="@+id/invoicesListFragment"
+        android:name="com.example.facturas.ui.fragments.InvoicesListFragment"
+        android:label="fragment_invoices_list"
+        tools:layout="@layout/fragment_invoices_list" >
+        <action
+            android:id="@+id/action_invoicesListFragment_to_invoicesFilterFragment"
+            app:destination="@id/invoicesFilterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/invoicesFilterFragment"
+        android:name="com.example.facturas.ui.fragments.InvoicesFilterFragment"
+        android:label="fragment_invoices_filter"
+        tools:layout="@layout/fragment_invoices_filter" />
+</navigation>
