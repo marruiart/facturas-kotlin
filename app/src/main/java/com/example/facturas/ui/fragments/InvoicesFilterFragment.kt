@@ -12,8 +12,7 @@ class InvoicesFilterFragment : Fragment() {
     private lateinit var binding: FragmentInvoicesFilterBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentInvoicesFilterBinding.inflate(inflater, container, false)
@@ -26,8 +25,7 @@ class InvoicesFilterFragment : Fragment() {
     }
 
     private fun setToolbar() {
-        val toolbar = binding.toolbar
-        setMenuListeners(toolbar)
+        setMenuListeners(binding.appTopBar.toolbar)
     }
 
     private fun setMenuListeners(toolbar: Toolbar) {
