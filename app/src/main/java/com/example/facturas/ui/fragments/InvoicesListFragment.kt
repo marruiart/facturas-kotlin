@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.facturas.R
+import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.databinding.FragmentInvoicesListBinding
 import com.example.facturas.ui.adapters.InvoicesListAdapter
 import com.example.facturas.ui.viewmodels.InvoicesListViewModel
@@ -34,7 +36,7 @@ class InvoicesListFragment : Fragment() {
     }
 
     private fun bindView() {
-        val adapter = InvoicesListAdapter()
+        val adapter = InvoicesListAdapter(::onInvoiceClick)
         val recyclerView = binding.invoicesRv
         val list = viewModel.getAllInvoices()
 
@@ -84,5 +86,22 @@ class InvoicesListFragment : Fragment() {
                 else -> false
             }
         }
+    }
+
+    private fun onInvoiceClick(invoice: InvoiceVO) {
+        createAlertDialog().show()
+        Log.d("CLICK_INVOICE", invoice.toString())
+    }
+
+    private fun createAlertDialog(): AlertDialog {
+        val builder: AlertDialog.Builder = requireActivity().let {
+            AlertDialog.Builder(it)
+        }
+        builder.setMessage(R.string.not_available_yet)
+            .setTitle(R.string.information)
+            .setNegativeButton(R.string.close) { dialog, _ ->
+                dialog.cancel()
+            }
+        return builder.create()
     }
 }

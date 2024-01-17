@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.databinding.InvoicesListItemBinding
 
-class InvoicesListAdapter :
-    ListAdapter<InvoiceVO, InvoicesListAdapter.InvoicesListViewHolder>(InvoiceDiffCallBack()) {
+class InvoicesListAdapter(
+    private val onInvoiceClick: ((invoice: InvoiceVO) -> Unit)
+) : ListAdapter<InvoiceVO, InvoicesListAdapter.InvoicesListViewHolder>(InvoiceDiffCallBack()) {
 
-    class InvoicesListViewHolder(private val binding: InvoicesListItemBinding) :
+    inner class InvoicesListViewHolder(private val binding: InvoicesListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private val item = binding.invoiceItem
         private val amount = binding.itemAmount
         private val date = binding.itemDate
         private val state = binding.itemState
@@ -22,6 +24,9 @@ class InvoicesListAdapter :
             date.text = invoice.date
             state.text = invoice.state
             amount.text = invoice.amount.toString()
+            item.setOnClickListener {
+                onInvoiceClick(invoice)
+            }
         }
     }
 
