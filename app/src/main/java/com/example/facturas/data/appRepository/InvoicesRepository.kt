@@ -4,10 +4,17 @@ import android.content.res.AssetManager
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.data.network.NetworkRepository
 import com.example.facturas.utils.AppEnvironment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.withContext
 
 class InvoicesRepository private constructor(
     private val networkRepository: NetworkRepository
 ) {
+    var _invoices: List<InvoiceVO> = emptyList()
+    val invoices: Flow<List<InvoiceVO>>
+        get() = flowOf(_invoices)
 
     companion object {
         private var _INSTANCE: InvoicesRepository? = null
@@ -21,7 +28,11 @@ class InvoicesRepository private constructor(
         }
     }
 
-    suspend fun getAllInvoices(): List<InvoiceVO> {
-        return networkRepository.getAllInvoices().map { it.asInvoiceVO() }
+    suspend fun refreshInvoicesList(): List<InvoiceVO> = withContext(Dispatchers.IO) {
+        // SCOPE: suspendable code -> executed asynchronously in a coroutine.
+        // Dispatchers.IO is a special thread for network operations
+        val invoicesList = networkRepository.getAllInvoices().map { it.asInvoiceVO() }
+        _invoices = invoicesList
+        invoicesList
     }
 }

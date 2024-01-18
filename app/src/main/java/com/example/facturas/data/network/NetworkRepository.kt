@@ -33,11 +33,11 @@ class NetworkRepository private constructor(
                 response.body()!!.getInvoicesList().map { it.asApiModel() }
             } else {
                 Log.e("ERROR", response.message())
-                listOf()
+                emptyList()
             }
         } catch (e: Exception) {
             Log.e("ERROR", e.message.toString())
-            listOf()
+            emptyList()
         }
     }
 }

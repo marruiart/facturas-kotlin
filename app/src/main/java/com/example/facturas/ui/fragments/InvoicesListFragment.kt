@@ -2,14 +2,17 @@ package com.example.facturas.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.example.facturas.R
 import com.example.facturas.data.appRepository.models.InvoiceVO
@@ -17,6 +20,7 @@ import com.example.facturas.databinding.FragmentInvoicesListBinding
 import com.example.facturas.ui.adapters.InvoicesListAdapter
 import com.example.facturas.ui.viewmodels.InvoicesListViewModel
 import com.google.android.material.color.MaterialColors
+import kotlinx.coroutines.launch
 
 class InvoicesListFragment : Fragment() {
     private lateinit var binding: FragmentInvoicesListBinding
@@ -39,17 +43,21 @@ class InvoicesListFragment : Fragment() {
     private fun bindView() {
         val adapter = InvoicesListAdapter(::onInvoiceClick)
         val recyclerView = binding.invoicesRv
-        val list = viewModel.getAllInvoices()
-
         recyclerView.adapter = adapter
-        Log.d("LIST", list.toString())
-        if (list.isEmpty()) {
-            binding.emptyRv.visibility = View.VISIBLE
-            binding.invoicesRv.visibility = View.GONE
-        } else {
-            adapter.submitList(list)
-            binding.emptyRv.visibility = View.GONE
-            binding.invoicesRv.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.invoices.collect { list ->
+                    Log.d("LIST", list.toString())
+                    if (list.isEmpty()) {
+                        binding.emptyRv.visibility = View.VISIBLE
+                        binding.invoicesRv.visibility = View.GONE
+                    } else {
+                        adapter.submitList(list)
+                        binding.emptyRv.visibility = View.GONE
+                        binding.invoicesRv.visibility = View.VISIBLE
+                    }
+                }
+            }
         }
     }
 
