@@ -23,7 +23,7 @@ class InvoicesListFragment : Fragment() {
     private val viewModel: InvoicesListViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentInvoicesListBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,6 +32,7 @@ class InvoicesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setToolbar(view)
+        viewModel.setRepository() // TODO create a boolean button and pass it as argument
         bindView()
     }
 

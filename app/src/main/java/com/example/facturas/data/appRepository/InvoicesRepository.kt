@@ -1,7 +1,9 @@
 package com.example.facturas.data.appRepository
 
+import android.content.res.AssetManager
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.data.network.NetworkRepository
+import com.example.facturas.utils.AppEnvironment
 
 class InvoicesRepository private constructor(
     private val networkRepository: NetworkRepository
@@ -9,12 +11,17 @@ class InvoicesRepository private constructor(
 
     companion object {
         private var _INSTANCE: InvoicesRepository? = null
-        fun getInstance(): InvoicesRepository {
-            return _INSTANCE ?: InvoicesRepository(NetworkRepository.getInstance())
+
+        fun getInstance(
+            assetManager: AssetManager, environment: String = AppEnvironment.PROD_ENVIRONMENT
+        ): InvoicesRepository {
+            return _INSTANCE ?: InvoicesRepository(
+                NetworkRepository.getInstance(assetManager, environment)
+            )
         }
     }
 
-    fun getAllInvoices(): List<InvoiceVO> {
-        return networkRepository.getAllMockInvoices().map { invoice -> invoice.asInvoiceVO() }
+    suspend fun getAllInvoices(): List<InvoiceVO> {
+        return networkRepository.getAllInvoices().map { it.asInvoiceVO() }
     }
 }

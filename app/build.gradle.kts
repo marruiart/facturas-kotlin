@@ -51,6 +51,8 @@ dependencies {
     val gson = "2.10"
     val fragment = "1.6.2"
     val navVersion = "2.7.6"
+    val retrofit = "2.9.0"
+    val retromock = "1.1.1"
 
     implementation("androidx.core:core-ktx:${core}")
     testImplementation("junit:junit:${junit}")
@@ -68,5 +70,10 @@ dependencies {
     // NAVIGATION
     implementation("androidx.navigation:navigation-fragment-ktx:${navVersion}")
     implementation("androidx.navigation:navigation-ui-ktx:${navVersion}")
+    // RETROFIT
+    implementation("com.squareup.retrofit2:retrofit:${retrofit}")
+    implementation("com.squareup.retrofit2:converter-gson:${retrofit}")
+    // RETROMOCK
+    implementation("co.infinum:retromock:${retromock}")
 
 }
