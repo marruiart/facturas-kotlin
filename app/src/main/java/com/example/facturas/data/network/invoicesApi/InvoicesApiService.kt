@@ -10,6 +10,7 @@ import co.infinum.retromock.meta.MockResponse
 import com.example.facturas.data.network.invoicesApi.models.InvoicesListResponse
 import com.example.facturas.utils.AppEnvironment
 import com.example.facturas.utils.BASE_URL
+import com.example.facturas.utils.ENVIRONMENT
 import com.example.facturas.utils.ResourceBodyFactory
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -30,6 +31,7 @@ interface IInvoicesMockApi : IInvoicesApi {
     @MockRandom
     @MockResponse(body = "mock_empty_list.json")
     @MockResponse(body = "mock_invoices_list.json")
+    @MockResponse(body = "mock_invoices_current_list.json")
     @MockResponse(body = "mock_invoices_paid_list.json")
     @MockBehavior(durationDeviation = 1000, durationMillis = 1000)
     @GET("/")
@@ -41,7 +43,7 @@ interface IInvoicesMockApi : IInvoicesApi {
  */
 class InvoicesApiService(
     private val assetManager: AssetManager,
-    private val environment: String = AppEnvironment.PROD_ENVIRONMENT
+    private val environment: String = ENVIRONMENT
 ) {
     val api: IInvoicesApi
 

@@ -26,7 +26,14 @@
             app:title="@string/invoices_list_toolbar_back"
             app:titleMarginStart="0dp"
             app:titleTextAppearance="@style/TextAppearance.Material3.ActionBar.Title"
-            app:titleTextColor="?attr/colorPrimary" />
+            app:titleTextColor="?attr/colorPrimary">
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_environment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -78,6 +85,7 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             tools:visibility="gone" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

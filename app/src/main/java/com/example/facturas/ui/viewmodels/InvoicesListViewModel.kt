@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.facturas.data.appRepository.InvoicesRepository
 import com.example.facturas.data.appRepository.models.InvoiceVO
-import com.example.facturas.utils.AppEnvironment
+import com.example.facturas.utils.ENVIRONMENT
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,13 +23,23 @@ class InvoicesListViewModel(
     val invoices: StateFlow<List<InvoiceVO>>
         get() = _invoices.asStateFlow()
 
-    fun setRepository(fetchMockData: Boolean = true) {
-        repository = InvoicesRepository.getInstance(
-            application.applicationContext.assets, getAppEnvironment(fetchMockData)
-        )
+    fun initRepository() {
+        setRepository(ENVIRONMENT)
+    }
+
+    fun setRepository(environment: String) {
+        repository = getRepositoryInstance(environment)
+        refreshRepositoryData()
+    }
+
+    private fun getRepositoryInstance(environment: String): InvoicesRepository {
+        return InvoicesRepository.getInstance(application.applicationContext.assets, environment)
+    }
+
+    private fun refreshRepositoryData() {
         viewModelScope.launch {
             try {
-                // await for refreshDestinationsList()
+                // await for refreshing
                 repository.refreshInvoicesList()
             } catch (e: IOException) {
                 Log.ERROR
@@ -40,9 +50,5 @@ class InvoicesListViewModel(
                 _invoices.value = invoices
             }
         }
-    }
-
-    private fun getAppEnvironment(fetchMockData: Boolean): String {
-        return if (fetchMockData) AppEnvironment.MOCK_ENVIRONMENT else AppEnvironment.PROD_ENVIRONMENT
     }
 }

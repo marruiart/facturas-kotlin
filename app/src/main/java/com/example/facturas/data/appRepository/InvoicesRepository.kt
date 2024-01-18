@@ -3,7 +3,7 @@ package com.example.facturas.data.appRepository
 import android.content.res.AssetManager
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.data.network.NetworkRepository
-import com.example.facturas.utils.AppEnvironment
+import com.example.facturas.utils.ENVIRONMENT
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -20,7 +20,7 @@ class InvoicesRepository private constructor(
         private var _INSTANCE: InvoicesRepository? = null
 
         fun getInstance(
-            assetManager: AssetManager, environment: String = AppEnvironment.PROD_ENVIRONMENT
+            assetManager: AssetManager, environment: String = ENVIRONMENT
         ): InvoicesRepository {
             return _INSTANCE ?: InvoicesRepository(
                 NetworkRepository.getInstance(assetManager, environment)

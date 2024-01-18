@@ -19,6 +19,7 @@ import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.databinding.FragmentInvoicesListBinding
 import com.example.facturas.ui.adapters.InvoicesListAdapter
 import com.example.facturas.ui.viewmodels.InvoicesListViewModel
+import com.example.facturas.utils.AppEnvironment
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.launch
 
@@ -36,14 +37,43 @@ class InvoicesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setToolbar(view)
-        viewModel.setRepository() // TODO create a boolean button and pass it as argument
+        viewModel.initRepository()
         bindView()
     }
 
     private fun bindView() {
         val adapter = InvoicesListAdapter(::onInvoiceClick)
-        val recyclerView = binding.invoicesRv
-        recyclerView.adapter = adapter
+        setEnvironmentSwitchListener()
+        setRecyclerViewAdapter(adapter)
+        populateInvoicesList(adapter)
+    }
+
+    private fun setToolbar(view: View) {
+        val toolbar = binding.toolbar
+        toolbar.inflateMenu(R.menu.invoices_list_toolbar_menu)
+        setNavigationIconColor(toolbar, view, com.google.android.material.R.attr.colorPrimary)
+        setMenuListeners(toolbar)
+    }
+
+    private fun setEnvironmentSwitchListener() {
+        binding.switchEnvironment.setOnCheckedChangeListener { _, isChecked ->
+            var environment: String
+            if (isChecked) {
+                environment = AppEnvironment.PROD_ENVIRONMENT
+                Toast.makeText(context, "Entorno cambiado a producción", Toast.LENGTH_SHORT).show()
+            } else {
+                environment = AppEnvironment.MOCK_ENVIRONMENT
+                Toast.makeText(context, "Entorno cambiado a desarrollo (mock data)", Toast.LENGTH_SHORT).show()
+            }
+            viewModel.setRepository(environment)
+        }
+    }
+
+    private fun setRecyclerViewAdapter(adapter: InvoicesListAdapter) {
+        binding.invoicesRv.adapter = adapter
+    }
+
+    private fun populateInvoicesList(adapter: InvoicesListAdapter) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.invoices.collect { list ->
@@ -59,13 +89,6 @@ class InvoicesListFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun setToolbar(view: View) {
-        val toolbar = binding.toolbar
-        toolbar.inflateMenu(R.menu.invoices_list_toolbar_menu)
-        setNavigationIconColor(toolbar, view, com.google.android.material.R.attr.colorPrimary)
-        setMenuListeners(toolbar)
     }
 
     private fun setNavigationIconColor(toolbar: Toolbar, view: View, color: Int) {
@@ -106,8 +129,7 @@ class InvoicesListFragment : Fragment() {
         val builder: AlertDialog.Builder = requireActivity().let {
             AlertDialog.Builder(it)
         }
-        builder.setMessage(R.string.not_available_yet)
-            .setTitle(R.string.information)
+        builder.setMessage(R.string.not_available_yet).setTitle(R.string.information)
             .setNegativeButton(R.string.close) { dialog, _ ->
                 dialog.cancel()
             }

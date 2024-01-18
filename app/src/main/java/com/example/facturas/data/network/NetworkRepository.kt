@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.facturas.data.network.invoicesApi.InvoicesApiService
 import com.example.facturas.data.network.invoicesApi.models.InvoiceApiModel
 import com.example.facturas.utils.AppEnvironment
+import com.example.facturas.utils.ENVIRONMENT
 
 class NetworkRepository private constructor(
     private val service: InvoicesApiService
@@ -15,7 +16,7 @@ class NetworkRepository private constructor(
         private var _INSTANCE: NetworkRepository? = null
 
         fun getInstance(
-            assetManager: AssetManager, environment: String = AppEnvironment.PROD_ENVIRONMENT
+            assetManager: AssetManager, environment: String = ENVIRONMENT
         ): NetworkRepository {
             return if (environment == AppEnvironment.MOCK_ENVIRONMENT) {
                 _MOCK_INSTANCE ?: NetworkRepository(InvoicesApiService(assetManager, environment))
