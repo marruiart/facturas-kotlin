@@ -20,7 +20,7 @@ class InvoicesListAdapter(
         private val date = binding.itemDate
         private val state = binding.itemState
         fun bindView(invoice: InvoiceVO) {
-            Log.d("INVOICES_ADAPTER", invoice.toString())
+            Log.d("DEBUG INVOICES_ADAPTER", invoice.toString())
             date.text = invoice.date
             state.text = invoice.state
             amount.text = invoice.amount.toString()
@@ -42,7 +42,7 @@ class InvoicesListAdapter(
      * Create new views (invoked by the layout manager)
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InvoicesListViewHolder {
-        Log.d("INVOICES_ADAPTER", "onCreateViewHolder")
+        Log.d("DEBUG INVOICES_ADAPTER", "onCreateViewHolder")
         val binding =
             InvoicesListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return InvoicesListViewHolder(binding)
@@ -52,7 +52,7 @@ class InvoicesListAdapter(
      * Replace the contents of a view (invoked by the layout manager)
      */
     override fun onBindViewHolder(holder: InvoicesListViewHolder, position: Int) {
-        Log.d("INVOICES_ADAPTER", "onBindViewHolder")
+        Log.d("DEBUG INVOICES_ADAPTER", "onBindViewHolder")
         val invoice = getItem(position)
         holder.bindView(invoice)
     }

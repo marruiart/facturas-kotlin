@@ -30,7 +30,7 @@ class NetworkRepository private constructor(
         return try {
             val response = service.api.getAllInvoices()
             if (response.isSuccessful && response.body() != null) {
-                Log.d("INVOICES RESPONSE", response.body().toString())
+                Log.d("DEBUG INVOICES RESPONSE", response.body().toString())
                 response.body()!!.getInvoicesList().map { it.asApiModel() }
             } else {
                 Log.e("ERROR", response.message())

@@ -81,7 +81,7 @@ class InvoicesListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.invoices.collect { list ->
-                    Log.d("LIST", list.toString())
+                    Log.d("DEBUG LIST", list.toString())
                     if (list.isEmpty()) {
                         binding.emptyRv.visibility = View.VISIBLE
                         binding.invoicesRv.visibility = View.GONE
@@ -126,7 +126,7 @@ class InvoicesListFragment : Fragment() {
 
     private fun onInvoiceClick(invoice: InvoiceVO) {
         createAlertDialog().show()
-        Log.d("CLICK_INVOICE", invoice.toString())
+        Log.d("DEBUG CLICK_INVOICE", invoice.toString())
     }
 
     private fun createAlertDialog(): AlertDialog {

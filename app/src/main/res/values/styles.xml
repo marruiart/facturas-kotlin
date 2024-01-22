@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="DatepickerTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="boxStrokeWidth">0dp</item>
-    </style>
-
-    <style name="DatepickerTextInputEditTextStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
+    <style name="DatepickerStyle" parent="Widget.Material3.Button.TonalButton">
         <item name="backgroundTint">?attr/colorSurfaceVariant</item>
     </style>
 

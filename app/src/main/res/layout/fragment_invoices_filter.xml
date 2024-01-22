@@ -35,7 +35,7 @@
                 app:layout_constraintTop_toTopOf="@id/constraintLayout" />
 
             <TextView
-                android:id="@+id/issue_date_from"
+                android:id="@+id/issue_date_from_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/invoices_filter_issue_date_from"
@@ -45,51 +45,37 @@
                 app:layout_constraintTop_toBottomOf="@id/issue_date_title" />
 
             <TextView
-                android:id="@+id/issue_date_to"
+                android:id="@+id/issue_date_to_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/invoices_filter_issue_date_to"
                 android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 app:layout_constraintEnd_toEndOf="@id/guideline_right"
-                app:layout_constraintStart_toEndOf="@id/issue_date_from"
+                app:layout_constraintStart_toEndOf="@id/issue_date_from_label"
                 app:layout_constraintTop_toBottomOf="@id/issue_date_title" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/issue_date_datepicker_from"
-                style="@style/DatepickerTextInputLayoutStyle"
+            <Button
+                android:id="@+id/issue_date_from_date"
+                style="@style/DatepickerStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintStart_toStartOf="@id/issue_date_from"
-                app:layout_constraintTop_toBottomOf="@id/issue_date_from"
-                app:shapeAppearance="@style/Semirounded">
+                android:layout_weight="1"
+                android:text="@string/invoices_filter_default_date"
+                app:layout_constraintStart_toStartOf="@id/issue_date_from_label"
+                app:layout_constraintTop_toBottomOf="@id/issue_date_from_label"
+                app:shapeAppearance="@style/Semirounded" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/DatepickerTextInputEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:backgroundTintMode="add"
-                    android:text="@string/invoices_filter_default_date" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/issue_date_datepicker_to"
-                style="@style/DatepickerTextInputLayoutStyle"
+            <Button
+                android:id="@+id/issue_date_to_date"
+                style="@style/DatepickerStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintStart_toStartOf="@+id/issue_date_to"
-                app:layout_constraintTop_toBottomOf="@+id/issue_date_to"
-                app:shapeAppearance="@style/Semirounded">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/DatepickerTextInputEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:backgroundTintMode="add"
-                    android:text="@string/invoices_filter_default_date" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_weight="1"
+                android:text="@string/invoices_filter_default_date"
+                app:layout_constraintStart_toStartOf="@+id/issue_date_to_label"
+                app:layout_constraintTop_toBottomOf="@+id/issue_date_to_label"
+                app:shapeAppearance="@style/Semirounded" />
 
             <View
                 android:id="@+id/divider_issue_amount"
@@ -100,7 +86,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/amount_title"
                 app:layout_constraintEnd_toEndOf="@id/guideline_right"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
-                app:layout_constraintTop_toBottomOf="@+id/issue_date_datepicker_from" />
+                app:layout_constraintTop_toBottomOf="@+id/issue_date_from_date" />
 
             <TextView
                 android:id="@+id/amount_title"
