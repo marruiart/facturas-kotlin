@@ -29,26 +29,31 @@ class InvoicesListViewModel(
 
     fun setRepository(environment: String) {
         repository = getRepositoryInstance(environment)
-        refreshRepositoryData()
+        populateListData()
     }
 
     private fun getRepositoryInstance(environment: String): InvoicesRepository {
-        return InvoicesRepository.getInstance(application.applicationContext.assets, environment)
+        return InvoicesRepository.getInstance(application.applicationContext, environment)
     }
 
-    private fun refreshRepositoryData() {
+    private fun populateListData() {
+        repository.invoices
         viewModelScope.launch {
-            try {
-                // await for refreshing
-                repository.refreshInvoicesList()
-            } catch (e: IOException) {
-                Log.ERROR
-            } catch (e: NetworkErrorException) {
-                Log.ERROR
-            }
+            refreshRepositoryData()
             repository.invoices.collect { invoices ->
                 _invoices.value = invoices
             }
+        }
+    }
+
+    private suspend fun refreshRepositoryData() {
+        try {
+            // await for refreshing
+            repository.refreshInvoicesList()
+        } catch (e: IOException) {
+            Log.ERROR
+        } catch (e: NetworkErrorException) {
+            Log.ERROR
         }
     }
 }

@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -53,6 +54,7 @@ dependencies {
     val navVersion = "2.7.6"
     val retrofit = "2.9.0"
     val retromock = "1.1.1"
+    val roomVersion = "2.6.1"
 
     implementation("androidx.core:core-ktx:${core}")
     testImplementation("junit:junit:${junit}")
@@ -75,5 +77,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:${retrofit}")
     // RETROMOCK
     implementation("co.infinum:retromock:${retromock}")
+    // ROOM
+    kapt("androidx.room:room-compiler:${roomVersion}")
+    implementation("androidx.room:room-runtime:${roomVersion}")
+    // to be able to use observers
+    implementation("androidx.room:room-ktx:${roomVersion}")
 
 }

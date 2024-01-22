@@ -63,7 +63,11 @@ class InvoicesListFragment : Fragment() {
                 Toast.makeText(context, "Entorno cambiado a producción", Toast.LENGTH_SHORT).show()
             } else {
                 environment = AppEnvironment.MOCK_ENVIRONMENT
-                Toast.makeText(context, "Entorno cambiado a desarrollo (mock data)", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Entorno cambiado a desarrollo (mock data)",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             viewModel.setRepository(environment)
         }

@@ -1,38 +1,50 @@
 package com.example.facturas.data.appRepository
 
-import android.content.res.AssetManager
+import android.content.Context
 import com.example.facturas.data.appRepository.models.InvoiceVO
+import com.example.facturas.data.local.InvoicesDatabase
+import com.example.facturas.data.local.LocalDbRepository
+import com.example.facturas.data.local.models.InvoiceEntity
+import com.example.facturas.data.local.models.asInvoiceVOList
 import com.example.facturas.data.network.NetworkRepository
 import com.example.facturas.utils.ENVIRONMENT
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class InvoicesRepository private constructor(
-    private val networkRepository: NetworkRepository
+    private val networkRepository: NetworkRepository,
+    private val localDbRepository: LocalDbRepository
 ) {
-    var _invoices: List<InvoiceVO> = emptyList()
     val invoices: Flow<List<InvoiceVO>>
-        get() = flowOf(_invoices)
+        get() = localDbRepository.getAllInvoices.map { it.asInvoiceVOList() }
 
     companion object {
         private var _INSTANCE: InvoicesRepository? = null
 
         fun getInstance(
-            assetManager: AssetManager, environment: String = ENVIRONMENT
+            context: Context, environment: String = ENVIRONMENT
         ): InvoicesRepository {
             return _INSTANCE ?: InvoicesRepository(
-                NetworkRepository.getInstance(assetManager, environment)
+                NetworkRepository.getInstance(context.assets, environment),
+                LocalDbRepository(InvoicesDatabase.getInstance(context).invoicesDao())
             )
         }
     }
 
-    suspend fun refreshInvoicesList(): List<InvoiceVO> = withContext(Dispatchers.IO) {
+    suspend fun refreshInvoicesList() = withContext(Dispatchers.IO) {
         // SCOPE: suspendable code -> executed asynchronously in a coroutine.
         // Dispatchers.IO is a special thread for network operations
-        val invoicesList = networkRepository.getAllInvoices().map { it.asInvoiceVO() }
-        _invoices = invoicesList
-        invoicesList
+        val invoicesList = networkRepository.getAllInvoices()
+        refreshLocalDb(invoicesList.map { it.asInvoiceEntity() })
     }
+
+    private suspend fun refreshLocalDb(invoices: List<InvoiceEntity>) {
+        localDbRepository.deleteAllInvoices()
+        saveInvoicesToLocalDb(invoices)
+    }
+
+    private suspend fun saveInvoicesToLocalDb(invoices: List<InvoiceEntity>) =
+        localDbRepository.insertInvoices(invoices)
 }
