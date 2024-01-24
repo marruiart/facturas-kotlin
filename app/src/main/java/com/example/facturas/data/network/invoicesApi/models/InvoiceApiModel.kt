@@ -6,7 +6,7 @@ import com.example.facturas.data.local.models.InvoiceEntity
 data class InvoiceApiModel(
     val state: String,
     val date: String,
-    val amount: Double
+    val amount: Float
 ) {
     fun asInvoiceEntity(): InvoiceEntity {
         return InvoiceEntity(

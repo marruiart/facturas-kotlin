@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,15 +18,20 @@ import androidx.navigation.findNavController
 import com.example.facturas.R
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.databinding.FragmentInvoicesListBinding
+import com.example.facturas.services.FilterService
 import com.example.facturas.ui.adapters.InvoicesListAdapter
 import com.example.facturas.ui.viewmodels.InvoicesListViewModel
 import com.example.facturas.utils.AppEnvironment
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.launch
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class InvoicesListFragment : Fragment() {
     private lateinit var binding: FragmentInvoicesListBinding
+    private var filterSvc: FilterService = FilterService.getInstance()
     private val viewModel: InvoicesListViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -52,6 +58,7 @@ class InvoicesListFragment : Fragment() {
         val toolbar = binding.toolbar
         toolbar.inflateMenu(R.menu.invoices_list_toolbar_menu)
         setNavigationIconColor(toolbar, view, com.google.android.material.R.attr.colorPrimary)
+        setMenuIconColor(toolbar, view, com.google.android.material.R.attr.colorOnBackground)
         setMenuListeners(toolbar)
     }
 
@@ -89,9 +96,36 @@ class InvoicesListFragment : Fragment() {
                         adapter.submitList(list)
                         binding.emptyRv.visibility = View.GONE
                         binding.invoicesRv.visibility = View.VISIBLE
+                        updateFilterAmountRange(list)
                     }
                 }
             }
+        }
+    }
+
+    private fun updateFilterAmountRange(list: List<InvoiceVO>) {
+        var max: Float = Float.MIN_VALUE
+        var min: Float = Float.MAX_VALUE
+        list.forEach { invoice ->
+            val amountCeil = ceil(invoice.amount)
+            val amountFloor = floor(invoice.amount)
+            max = if (amountCeil > max) amountCeil else max
+            min = if (amountFloor < min) amountFloor else min
+        }
+        filterSvc.filter.setAmountRange(min, max)
+        if (filterSvc.filter.selectedAmount.max != null && filterSvc.filter.selectedAmount.max!! > max) {
+            Log.d(
+                "LIST FILTER",
+                "Change MAX. Dirty: ${!filterSvc.filter.isDirty} Over: ${filterSvc.filter.selectedAmount.max != null && filterSvc.filter.selectedAmount.max!! > max}"
+            )
+            filterSvc.filter.selectedAmount.max = null
+        }
+        if (filterSvc.filter.selectedAmount.min != null && filterSvc.filter.selectedAmount.min!! < min) {
+            Log.d(
+                "LIST FILTER",
+                "Change MIN. Dirty: ${!filterSvc.filter.isDirty} Below: ${filterSvc.filter.selectedAmount.min != null && filterSvc.filter.selectedAmount.min!! < min}"
+            )
+            filterSvc.filter.selectedAmount.min = null
         }
     }
 
@@ -101,6 +135,12 @@ class InvoicesListFragment : Fragment() {
                 view, color
             )
         )
+    }
+
+    private fun setMenuIconColor(toolbar: Toolbar, view: View, color: Int) {
+        toolbar.menu.children.forEach {
+            it.icon?.setTint(MaterialColors.getColor(view, color))
+        }
     }
 
     private fun setMenuListeners(toolbar: Toolbar) {

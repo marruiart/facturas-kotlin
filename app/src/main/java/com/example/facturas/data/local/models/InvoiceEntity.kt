@@ -7,7 +7,7 @@ import com.example.facturas.data.appRepository.models.InvoiceVO
 data class InvoiceEntity(
     val state: String,
     val date: String,
-    val amount: Double
+    val amount: Float
 ) {
     fun asInvoiceVO(): InvoiceVO {
         return InvoiceVO(

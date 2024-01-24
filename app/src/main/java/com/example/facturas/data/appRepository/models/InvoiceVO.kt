@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class InvoiceVO(
     val state: String,
     val date: String,
-    val amount: Double
+    val amount: Float
 ) : Parcelable

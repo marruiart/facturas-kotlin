@@ -56,4 +56,10 @@ class InvoicesListViewModel(
             Log.ERROR
         }
     }
+
+    // APPLY FILTER CALLBACK
+
+    fun applyFilter() {
+        Log.d("FILTER APPLY", "Aplicado")
+    }
 }
