@@ -27,6 +27,8 @@
     <string name="invoices_filter_apply_btn">Apply</string>
     <string name="invoices_filter_remove_btn">Remove filters</string>
     <string name="invoices_filter_pick_date">Select date</string>
+    <string name="invoices_filter_amount_range">%d</string>
+    <string name="invoices_filter_selected_amount_range">%d - %d</string>
     <!--  General messages  -->
     <string name="not_available_yet">This functionality is not available yet</string>
     <string name="information">Information</string>
