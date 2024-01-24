@@ -2,7 +2,7 @@ package com.example.facturas.services
 
 import com.example.facturas.services.models.Filter
 
-class FilterService {
+class FilterService private constructor() {
     var filter: Filter = Filter()
 
     companion object {
