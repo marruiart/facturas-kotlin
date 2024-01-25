@@ -1,16 +1,16 @@
 package com.example.facturas.data.network.invoicesApi.models
 
-import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.data.local.models.InvoiceEntity
+import java.time.LocalDate
 
 data class InvoiceApiModel(
-    val state: String,
-    val date: String,
+    val stateResource: Int,
+    val date: LocalDate,
     val amount: Float
 ) {
     fun asInvoiceEntity(): InvoiceEntity {
         return InvoiceEntity(
-            state,
+            stateResource,
             date,
             amount
         )

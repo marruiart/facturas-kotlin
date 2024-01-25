@@ -94,6 +94,7 @@ class InvoicesFilterFragment : Fragment() {
     private fun setFooterButtonsListeners() {
         binding.applyButton.setOnClickListener {
             viewModel.filter = tmpFilter.copy()
+            viewModel.applyFilter()
             navigateBack()
         }
         binding.removeButton.setOnClickListener {
@@ -134,23 +135,23 @@ class InvoicesFilterFragment : Fragment() {
 
     private fun setCheckboxesChangeListeners() {
         binding.checkBoxPaid.setOnCheckedChangeListener { _, isChecked ->
-            tmpFilter.state.paid = isChecked
+            tmpFilter.setState(R.string.invoice_item_paid, isChecked)
             tmpFilter.isDirty = true
         }
         binding.checkBoxCancelled.setOnCheckedChangeListener { _, isChecked ->
-            tmpFilter.state.cancelled = isChecked
+            tmpFilter.setState(R.string.invoice_item_cancelled, isChecked)
             tmpFilter.isDirty = true
         }
         binding.checkBoxFixedFee.setOnCheckedChangeListener { _, isChecked ->
-            tmpFilter.state.fixedFee = isChecked
+            tmpFilter.setState(R.string.invoice_item_fixed_fee, isChecked)
             tmpFilter.isDirty = true
         }
         binding.checkBoxPending.setOnCheckedChangeListener { _, isChecked ->
-            tmpFilter.state.pending = isChecked
+            tmpFilter.setState(R.string.invoice_item_pending, isChecked)
             tmpFilter.isDirty = true
         }
         binding.checkBoxPaymentPlan.setOnCheckedChangeListener { _, isChecked ->
-            tmpFilter.state.paymentPlan = isChecked
+            tmpFilter.setState(R.string.invoice_item_payment_plan, isChecked)
             tmpFilter.isDirty = true
         }
     }
@@ -197,11 +198,16 @@ class InvoicesFilterFragment : Fragment() {
     // CHECKBOXES LAYOUT
 
     private fun setCheckboxesLayout() {
-        binding.checkBoxPaid.isChecked = tmpFilter.state.paid
-        binding.checkBoxCancelled.isChecked = tmpFilter.state.cancelled
-        binding.checkBoxFixedFee.isChecked = tmpFilter.state.fixedFee
-        binding.checkBoxPending.isChecked = tmpFilter.state.pending
-        binding.checkBoxPaymentPlan.isChecked = tmpFilter.state.paymentPlan
+        binding.checkBoxPaid.isChecked =
+            tmpFilter.state.getOrDefault(R.string.invoice_item_paid, false)
+        binding.checkBoxCancelled.isChecked =
+            tmpFilter.state.getOrDefault(R.string.invoice_item_cancelled, false)
+        binding.checkBoxFixedFee.isChecked =
+            tmpFilter.state.getOrDefault(R.string.invoice_item_fixed_fee, false)
+        binding.checkBoxPending.isChecked =
+            tmpFilter.state.getOrDefault(R.string.invoice_item_pending, false)
+        binding.checkBoxPaymentPlan.isChecked =
+            tmpFilter.state.getOrDefault(R.string.invoice_item_payment_plan, false)
     }
 
     // DATEPICKER

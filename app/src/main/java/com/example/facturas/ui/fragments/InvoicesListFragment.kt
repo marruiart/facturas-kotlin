@@ -41,7 +41,6 @@ class InvoicesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setToolbar(view)
-        viewModel.initRepository()
         bindView()
     }
 
@@ -54,7 +53,7 @@ class InvoicesListFragment : Fragment() {
     }
 
     private fun bindView() {
-        val adapter = InvoicesListAdapter(::onInvoiceClick)
+        val adapter = InvoicesListAdapter(::onInvoiceClick, viewModel.appContext)
         setEnvironmentSwitchListener()
         setRecyclerViewAdapter(adapter)
         populateInvoicesList(adapter)

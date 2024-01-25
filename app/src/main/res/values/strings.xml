@@ -10,6 +10,7 @@
     <string name="invoice_item_fixed_fee">Cuota fija</string>
     <string name="invoice_item_pending">Pendiente de pago</string>
     <string name="invoice_item_payment_plan">Plan de pago</string>
+    <string name="invoice_item_state_empty" translatable="false" />
     <!-- Invoice filter -->
     <string name="invoices_filter_title">Filtrar facturas</string>
     <string name="invoices_filter_by_issue_date">Con fecha de emisión</string>
