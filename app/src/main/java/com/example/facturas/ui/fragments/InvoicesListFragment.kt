@@ -11,9 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.example.facturas.R
 import com.example.facturas.data.appRepository.models.InvoiceVO
@@ -61,7 +59,7 @@ class InvoicesListFragment : Fragment() {
 
     private fun setEnvironmentSwitchListener() {
         binding.switchEnvironment.setOnCheckedChangeListener { _, isChecked ->
-            var environment: String
+            val environment: String
             if (isChecked) {
                 environment = AppEnvironment.PROD_ENVIRONMENT
                 Toast.makeText(context, "Entorno cambiado a producción", Toast.LENGTH_SHORT).show()
@@ -81,47 +79,18 @@ class InvoicesListFragment : Fragment() {
 
     private fun populateInvoicesList(adapter: InvoicesListAdapter) {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.invoices.collect { list ->
-                    Log.d("DEBUG LIST", list.toString())
-                    if (list.isEmpty()) {
-                        binding.emptyRv.visibility = View.VISIBLE
-                        binding.invoicesRv.visibility = View.GONE
-                    } else {
-                        adapter.submitList(list)
-                        binding.emptyRv.visibility = View.GONE
-                        binding.invoicesRv.visibility = View.VISIBLE
-                        updateFilterAmountRange(list)
-                        Log.d("FILTER UPDATE SELECTED", viewModel.filter.toString())
-                    }
+            viewModel.invoices.collect { list ->
+                Log.d("DEBUG LIST", list.toString())
+                if (list.isEmpty()) {
+                    binding.emptyRv.visibility = View.VISIBLE
+                    binding.invoicesRv.visibility = View.GONE
+                } else {
+                    adapter.submitList(list)
+                    binding.emptyRv.visibility = View.GONE
+                    binding.invoicesRv.visibility = View.VISIBLE
+                    Log.d("FILTER UPDATE SELECTED", viewModel.filter.toString())
                 }
             }
-        }
-    }
-
-    private fun updateFilterAmountRange(list: List<InvoiceVO>) {
-        var max: Float = Float.MIN_VALUE
-        var min: Float = Float.MAX_VALUE
-        list.forEach { invoice ->
-            val amountCeil = ceil(invoice.amount)
-            val amountFloor = floor(invoice.amount)
-            max = if (amountCeil > max) amountCeil else max
-            min = if (amountFloor < min) amountFloor else min
-        }
-        viewModel.filter.setAmountRange(min, max)
-        if (viewModel.filter.selectedAmount.max != null && viewModel.filter.selectedAmount.max!! > max) {
-            Log.d(
-                "LIST FILTER",
-                "Change MAX. Dirty: ${!viewModel.filter.isDirty} Over: ${viewModel.filter.selectedAmount.max != null && viewModel.filter.selectedAmount.max!! > max}"
-            )
-            viewModel.filter.selectedAmount.max = null
-        }
-        if (viewModel.filter.selectedAmount.min != null && viewModel.filter.selectedAmount.min!! < min) {
-            Log.d(
-                "LIST FILTER",
-                "Change MIN. Dirty: ${!viewModel.filter.isDirty} Below: ${viewModel.filter.selectedAmount.min != null && viewModel.filter.selectedAmount.min!! < min}"
-            )
-            viewModel.filter.selectedAmount.min = null
         }
     }
 

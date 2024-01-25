@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.facturas.R
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.databinding.InvoicesListItemBinding
 import java.time.format.DateTimeFormatter

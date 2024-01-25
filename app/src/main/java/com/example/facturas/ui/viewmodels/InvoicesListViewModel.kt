@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class InvoicesListViewModel : ViewModel() {
 
@@ -46,6 +48,7 @@ class InvoicesListViewModel : ViewModel() {
             repository.invoices.collect { invoices ->
                 _invoices.value = invoices
                 _filteredInvoices.value = invoices
+                setFilterAmountRange(invoices)
             }
         }
     }
@@ -61,12 +64,29 @@ class InvoicesListViewModel : ViewModel() {
         }
     }
 
+    private fun setFilterAmountRange(list: List<InvoiceVO>) {
+        var max: Float = Float.MIN_VALUE
+        var min: Float = Float.MAX_VALUE
+        list.forEach { invoice ->
+            val amountCeil = ceil(invoice.amount)
+            val amountFloor = floor(invoice.amount)
+            max = if (amountCeil > max) amountCeil else max
+            min = if (amountFloor < min) amountFloor else min
+        }
+        filter.setAmountRange(min, max)
+        if (filter.selectedAmount.max != null && filter.selectedAmount.max!! > max) {
+            filter.selectedAmount.max = null
+        }
+        if (filter.selectedAmount.min != null && filter.selectedAmount.min!! < min) {
+            filter.selectedAmount.min = null
+        }
+    }
+
     fun applyFilter() {
         var filteredInvoices: MutableList<InvoiceVO> = _invoices.value.toMutableList()
-        filteredInvoices.filter { invoice ->
+        _filteredInvoices.value = filteredInvoices.filter { invoice ->
             checkFilterByDate(invoice) && checkFilterByAmount(invoice) && checkFilterByState(invoice)
         }
-        _filteredInvoices.value = filteredInvoices
     }
 
     private fun checkFilterByDate(invoice: InvoiceVO): Boolean {

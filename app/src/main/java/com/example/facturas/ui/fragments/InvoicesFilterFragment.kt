@@ -128,7 +128,6 @@ class InvoicesFilterFragment : Fragment() {
                     if (slider.values[1] == tmpFilter.amountRange.max) null else slider.values[1]
                 tmpFilter.setSelectedAmounts(selectedMin, selectedMax)
                 setMiddleAmountsLayout(min.toInt(), max.toInt())
-                tmpFilter.isDirty = true
             }
         })
     }
@@ -136,23 +135,18 @@ class InvoicesFilterFragment : Fragment() {
     private fun setCheckboxesChangeListeners() {
         binding.checkBoxPaid.setOnCheckedChangeListener { _, isChecked ->
             tmpFilter.setState(R.string.invoice_item_paid, isChecked)
-            tmpFilter.isDirty = true
         }
         binding.checkBoxCancelled.setOnCheckedChangeListener { _, isChecked ->
             tmpFilter.setState(R.string.invoice_item_cancelled, isChecked)
-            tmpFilter.isDirty = true
         }
         binding.checkBoxFixedFee.setOnCheckedChangeListener { _, isChecked ->
             tmpFilter.setState(R.string.invoice_item_fixed_fee, isChecked)
-            tmpFilter.isDirty = true
         }
         binding.checkBoxPending.setOnCheckedChangeListener { _, isChecked ->
             tmpFilter.setState(R.string.invoice_item_pending, isChecked)
-            tmpFilter.isDirty = true
         }
         binding.checkBoxPaymentPlan.setOnCheckedChangeListener { _, isChecked ->
             tmpFilter.setState(R.string.invoice_item_payment_plan, isChecked)
-            tmpFilter.isDirty = true
         }
     }
 
@@ -225,7 +219,6 @@ class InvoicesFilterFragment : Fragment() {
                 tmpFilter.dates.to = parseToLocalDate(selectedDate)
                 setDateLayout(binding.issueDateToDate, tmpFilter.dates.to)
             }
-            tmpFilter.isDirty = true
         }
     }
 
