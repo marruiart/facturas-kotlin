@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.facturas.data.appRepository.InvoicesRepository
 import com.example.facturas.data.appRepository.models.InvoiceVO
+import com.example.facturas.services.FilterService
 import com.example.facturas.utils.ENVIRONMENT
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ class InvoicesListViewModel(
     private var _invoices: MutableStateFlow<List<InvoiceVO>> = MutableStateFlow(emptyList())
     val invoices: StateFlow<List<InvoiceVO>>
         get() = _invoices.asStateFlow()
+    var filter = FilterService.filter
 
     fun initRepository() {
         setRepository(ENVIRONMENT)
@@ -55,11 +57,5 @@ class InvoicesListViewModel(
         } catch (e: NetworkErrorException) {
             Log.ERROR
         }
-    }
-
-    // APPLY FILTER CALLBACK
-
-    fun applyFilter() {
-        Log.d("FILTER APPLY", "Aplicado")
     }
 }

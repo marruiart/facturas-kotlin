@@ -10,7 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -18,7 +18,6 @@ import androidx.navigation.findNavController
 import com.example.facturas.R
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.databinding.FragmentInvoicesListBinding
-import com.example.facturas.services.FilterService
 import com.example.facturas.ui.adapters.InvoicesListAdapter
 import com.example.facturas.ui.viewmodels.InvoicesListViewModel
 import com.example.facturas.utils.AppEnvironment
@@ -29,8 +28,7 @@ import kotlin.math.floor
 
 class InvoicesListFragment : Fragment() {
     private lateinit var binding: FragmentInvoicesListBinding
-    private var filterSvc: FilterService = FilterService.getInstance()
-    private val viewModel: InvoicesListViewModel by viewModels()
+    private val viewModel: InvoicesListViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -47,19 +45,19 @@ class InvoicesListFragment : Fragment() {
         bindView()
     }
 
-    private fun bindView() {
-        val adapter = InvoicesListAdapter(::onInvoiceClick)
-        setEnvironmentSwitchListener()
-        setRecyclerViewAdapter(adapter)
-        populateInvoicesList(adapter)
-    }
-
     private fun setToolbar(view: View) {
         val toolbar = binding.toolbar
         toolbar.inflateMenu(R.menu.invoices_list_toolbar_menu)
         setNavigationIconColor(toolbar, view, com.google.android.material.R.attr.colorPrimary)
         setMenuIconColor(toolbar, view, com.google.android.material.R.attr.colorOnBackground)
         setMenuListeners(toolbar)
+    }
+
+    private fun bindView() {
+        val adapter = InvoicesListAdapter(::onInvoiceClick)
+        setEnvironmentSwitchListener()
+        setRecyclerViewAdapter(adapter)
+        populateInvoicesList(adapter)
     }
 
     private fun setEnvironmentSwitchListener() {
@@ -71,9 +69,7 @@ class InvoicesListFragment : Fragment() {
             } else {
                 environment = AppEnvironment.MOCK_ENVIRONMENT
                 Toast.makeText(
-                    context,
-                    "Entorno cambiado a desarrollo (mock data)",
-                    Toast.LENGTH_SHORT
+                    context, "Entorno cambiado a desarrollo (mock data)", Toast.LENGTH_SHORT
                 ).show()
             }
             viewModel.setRepository(environment)
@@ -97,6 +93,7 @@ class InvoicesListFragment : Fragment() {
                         binding.emptyRv.visibility = View.GONE
                         binding.invoicesRv.visibility = View.VISIBLE
                         updateFilterAmountRange(list)
+                        Log.d("FILTER UPDATE SELECTED", viewModel.filter.toString())
                     }
                 }
             }
@@ -112,20 +109,20 @@ class InvoicesListFragment : Fragment() {
             max = if (amountCeil > max) amountCeil else max
             min = if (amountFloor < min) amountFloor else min
         }
-        filterSvc.filter.setAmountRange(min, max)
-        if (filterSvc.filter.selectedAmount.max != null && filterSvc.filter.selectedAmount.max!! > max) {
+        viewModel.filter.setAmountRange(min, max)
+        if (viewModel.filter.selectedAmount.max != null && viewModel.filter.selectedAmount.max!! > max) {
             Log.d(
                 "LIST FILTER",
-                "Change MAX. Dirty: ${!filterSvc.filter.isDirty} Over: ${filterSvc.filter.selectedAmount.max != null && filterSvc.filter.selectedAmount.max!! > max}"
+                "Change MAX. Dirty: ${!viewModel.filter.isDirty} Over: ${viewModel.filter.selectedAmount.max != null && viewModel.filter.selectedAmount.max!! > max}"
             )
-            filterSvc.filter.selectedAmount.max = null
+            viewModel.filter.selectedAmount.max = null
         }
-        if (filterSvc.filter.selectedAmount.min != null && filterSvc.filter.selectedAmount.min!! < min) {
+        if (viewModel.filter.selectedAmount.min != null && viewModel.filter.selectedAmount.min!! < min) {
             Log.d(
                 "LIST FILTER",
-                "Change MIN. Dirty: ${!filterSvc.filter.isDirty} Below: ${filterSvc.filter.selectedAmount.min != null && filterSvc.filter.selectedAmount.min!! < min}"
+                "Change MIN. Dirty: ${!viewModel.filter.isDirty} Below: ${viewModel.filter.selectedAmount.min != null && viewModel.filter.selectedAmount.min!! < min}"
             )
-            filterSvc.filter.selectedAmount.min = null
+            viewModel.filter.selectedAmount.min = null
         }
     }
 

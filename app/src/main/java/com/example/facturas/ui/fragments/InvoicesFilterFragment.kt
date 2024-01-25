@@ -8,10 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.facturas.R
 import com.example.facturas.databinding.FragmentInvoicesFilterBinding
-import com.example.facturas.services.FilterService
 import com.example.facturas.services.models.Filter
 import com.example.facturas.services.models.Range
 import com.example.facturas.ui.viewmodels.InvoicesListViewModel
@@ -30,9 +29,7 @@ import kotlin.math.floor
 
 class InvoicesFilterFragment : Fragment() {
     private lateinit var binding: FragmentInvoicesFilterBinding
-    private val viewModel: InvoicesListViewModel by viewModels()
-    private var filterSvc: FilterService = FilterService.getInstance()
-    private lateinit var filter: Filter
+    private val viewModel: InvoicesListViewModel by activityViewModels()
     private lateinit var tmpFilter: Filter
 
     override fun onCreateView(
@@ -40,21 +37,19 @@ class InvoicesFilterFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentInvoicesFilterBinding.inflate(inflater, container, false)
-        initFilter()
-        Log.d("DEBUG FILTER", filter.toString())
+        initTmpFilter()
+        Log.d("FILTER DEBUG", tmpFilter.toString())
         return binding.root
+    }
+
+    private fun initTmpFilter() {
+        tmpFilter = viewModel.filter.copy()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
         setFilterInitialLayout()
-    }
-
-    private fun initFilter() {
-        filterSvc = FilterService.getInstance()
-        filter = filterSvc.filter
-        tmpFilter = filter.copy()
     }
 
     private fun setListeners() {
@@ -92,22 +87,19 @@ class InvoicesFilterFragment : Fragment() {
 
     private fun setDatePickerListener(pickerBtn: Button) {
         pickerBtn.setOnClickListener {
-            showDatePickerDialog(id == R.id.issue_date_from_date)
+            showDatePickerDialog(it.id == R.id.issue_date_from_date)
         }
     }
 
     private fun setFooterButtonsListeners() {
         binding.applyButton.setOnClickListener {
-            filterSvc.filter = tmpFilter.copy()
-            Log.d("APPLY DEBUG FILTER", filterSvc.filter.toString())
+            viewModel.filter = tmpFilter.copy()
             navigateBack()
-            viewModel.applyFilter()
         }
         binding.removeButton.setOnClickListener {
-            filterSvc.filter = Filter(
+            tmpFilter = Filter(
                 amountRange = Range(tmpFilter.amountRange.min, tmpFilter.amountRange.max)
             )
-            tmpFilter = filterSvc.filter.copy()
             setFilterInitialLayout()
         }
     }
@@ -121,12 +113,18 @@ class InvoicesFilterFragment : Fragment() {
             override fun onStopTrackingTouch(slider: RangeSlider) {
                 val min = slider.values[0]
                 val max = slider.values[1]
-                Log.d("FILTER SELECTED MIN", "${slider.values[0]} == ${filterSvc.filter.amountRange.min} ? ${slider.values[0] == filterSvc.filter.amountRange.min}")
-                    Log.d("FILTER SELECTED MAX", "${slider.values[1]} == ${filterSvc.filter.amountRange.max} ? ${slider.values[1] == filterSvc.filter.amountRange.max}")
+                Log.d(
+                    "FILTER SELECTED MIN",
+                    "${slider.values[0]} == ${tmpFilter.amountRange.min} ? ${slider.values[0] == tmpFilter.amountRange.min}"
+                )
+                Log.d(
+                    "FILTER SELECTED MAX",
+                    "${slider.values[1]} == ${tmpFilter.amountRange.max} ? ${slider.values[1] == tmpFilter.amountRange.max}"
+                )
                 val selectedMin =
-                    if (slider.values[0] == filterSvc.filter.amountRange.min) null else slider.values[0]
+                    if (slider.values[0] == tmpFilter.amountRange.min) null else slider.values[0]
                 val selectedMax =
-                    if (slider.values[1] == filterSvc.filter.amountRange.max) null else slider.values[1]
+                    if (slider.values[1] == tmpFilter.amountRange.max) null else slider.values[1]
                 tmpFilter.setSelectedAmounts(selectedMin, selectedMax)
                 setMiddleAmountsLayout(min.toInt(), max.toInt())
                 tmpFilter.isDirty = true
