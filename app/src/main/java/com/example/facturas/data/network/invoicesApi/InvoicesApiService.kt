@@ -5,8 +5,10 @@ import co.infinum.retromock.NonEmptyBodyFactory
 import co.infinum.retromock.Retromock
 import co.infinum.retromock.meta.Mock
 import co.infinum.retromock.meta.MockBehavior
+import co.infinum.retromock.meta.MockCircular
 import co.infinum.retromock.meta.MockRandom
 import co.infinum.retromock.meta.MockResponse
+import co.infinum.retromock.meta.MockResponses
 import com.example.facturas.data.network.invoicesApi.models.InvoicesListResponse
 import com.example.facturas.utils.AppEnvironment
 import com.example.facturas.utils.BASE_URL
@@ -28,11 +30,13 @@ interface IInvoicesProdApi : IInvoicesApi {
 
 interface IInvoicesMockApi : IInvoicesApi {
     @Mock
+    @MockResponses(
+        MockResponse(body = "mock_empty_list.json"),
+        MockResponse(body = "mock_invoices_list.json"),
+        MockResponse(body = "mock_invoices_current_list.json"),
+        MockResponse(body = "mock_invoices_paid_list.json")
+    )
     @MockRandom
-    @MockResponse(body = "mock_empty_list.json")
-    @MockResponse(body = "mock_invoices_list.json")
-    @MockResponse(body = "mock_invoices_current_list.json")
-    @MockResponse(body = "mock_invoices_paid_list.json")
     @MockBehavior(durationDeviation = 1000, durationMillis = 1000)
     @GET("/")
     override suspend fun getAllInvoices(): Response<InvoicesListResponse>
