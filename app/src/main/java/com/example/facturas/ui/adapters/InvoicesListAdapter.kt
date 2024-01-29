@@ -23,7 +23,7 @@ class InvoicesListAdapter(
 
         fun bindView(invoice: InvoiceVO) {
             date.text = invoice.date.format(Dates.FORMATTER)
-            state.text = App.applicationContext.getString(invoice.stateResource)
+            state.text = App.context.getString(invoice.stateResource)
             amount.text = invoice.amount.toString()
             item.setOnClickListener {
                 onInvoiceClick(invoice)

@@ -17,7 +17,7 @@ class NetworkRepository private constructor(
         private var _INSTANCE: NetworkRepository? = null
 
         fun getInstance(environment: String = ENVIRONMENT): NetworkRepository {
-            val assetManager: AssetManager = App.applicationContext.assets
+            val assetManager: AssetManager = App.context.assets
             return if (environment == AppEnvironment.MOCK_ENVIRONMENT) {
                 _MOCK_INSTANCE ?: NetworkRepository(InvoicesApiService(assetManager, environment))
             } else {

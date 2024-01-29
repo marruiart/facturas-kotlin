@@ -3,14 +3,14 @@ package com.example.facturas.utils
 import android.app.Application
 import android.content.Context
 
-class App: Application() {
 
-    init {
-        instance = this
+class App : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        context = applicationContext
     }
 
     companion object {
-        private var instance: App? = null
-        val applicationContext: Context = instance!!.applicationContext
+        lateinit var context: Context
     }
 }

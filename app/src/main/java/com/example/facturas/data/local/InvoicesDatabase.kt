@@ -24,7 +24,7 @@ abstract class InvoicesDatabase : RoomDatabase() {
 
         private fun buildDatabase(): InvoicesDatabase {
             return Room.databaseBuilder(
-                App.applicationContext, // context
+                App.context, // context
                 InvoicesDatabase::class.java, // db
                 "invoices_db" // db name
             ).build()
