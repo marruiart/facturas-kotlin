@@ -57,17 +57,15 @@ class InvoicesListFragment : Fragment() {
 
     private fun setEnvironmentSwitchListener() {
         binding.switchEnvironment.setOnCheckedChangeListener { _, isChecked ->
-            val environment: String
             if (isChecked) {
-                environment = AppEnvironment.PROD_ENVIRONMENT
                 Toast.makeText(context, "Entorno cambiado a producción", Toast.LENGTH_SHORT).show()
+                viewModel.changeEnvironment(AppEnvironment.PROD_ENVIRONMENT)
             } else {
-                environment = AppEnvironment.MOCK_ENVIRONMENT
                 Toast.makeText(
                     context, "Entorno cambiado a desarrollo (mock data)", Toast.LENGTH_SHORT
                 ).show()
+                viewModel.changeEnvironment(AppEnvironment.MOCK_ENVIRONMENT)
             }
-            viewModel.setRepository(environment)
         }
     }
 

@@ -1,11 +1,8 @@
 package com.example.facturas.data.network
 
-import android.content.res.AssetManager
 import android.util.Log
 import com.example.facturas.data.network.invoicesApi.InvoicesApiService
 import com.example.facturas.data.network.invoicesApi.models.InvoiceApiModel
-import com.example.facturas.utils.App
-import com.example.facturas.utils.AppEnvironment
 import com.example.facturas.utils.ENVIRONMENT
 
 class NetworkRepository private constructor(
@@ -13,22 +10,16 @@ class NetworkRepository private constructor(
 ) {
 
     companion object {
-        private var _MOCK_INSTANCE: NetworkRepository? = null
         private var _INSTANCE: NetworkRepository? = null
 
-        fun getInstance(environment: String = ENVIRONMENT): NetworkRepository {
-            val assetManager: AssetManager = App.context.assets
-            return if (environment == AppEnvironment.MOCK_ENVIRONMENT) {
-                _MOCK_INSTANCE ?: NetworkRepository(InvoicesApiService(assetManager, environment))
-            } else {
-                _INSTANCE ?: NetworkRepository(InvoicesApiService(assetManager, environment))
-            }
+        fun getInstance(): NetworkRepository {
+            return _INSTANCE ?: NetworkRepository(InvoicesApiService.getInstance())
         }
     }
 
-    suspend fun getAllInvoices(): List<InvoiceApiModel> {
+    suspend fun getAllInvoices(environment: String = ENVIRONMENT): List<InvoiceApiModel> {
         return try {
-            val response = service.api.getAllInvoices()
+            val response = service.getAllInvoices(environment)
             if (response.isSuccessful && response.body() != null) {
                 Log.d("DEBUG INVOICES RESPONSE", response.body().toString())
                 response.body()!!.getInvoicesList().map { it.asApiModel() }

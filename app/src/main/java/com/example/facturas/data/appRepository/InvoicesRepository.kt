@@ -20,22 +20,27 @@ class InvoicesRepository private constructor(
 ) {
     val invoices: Flow<List<InvoiceVO>>
         get() = localDbRepository.getAllInvoices.map { it.asInvoiceVOList() }
+    private var _environment: String = ENVIRONMENT
 
     companion object {
         private var _INSTANCE: InvoicesRepository? = null
 
-        fun getInstance(environment: String = ENVIRONMENT): InvoicesRepository {
+        fun getInstance(): InvoicesRepository {
             return _INSTANCE ?: InvoicesRepository(
-                NetworkRepository.getInstance(environment),
+                NetworkRepository.getInstance(),
                 LocalDbRepository(InvoicesDatabase.getInstance().invoicesDao())
             )
         }
     }
 
+    fun setEnvironment(environment: String) {
+        _environment = environment
+    }
+
     suspend fun refreshInvoicesList() = withContext(dispatcher) {
         // SCOPE: suspendable code -> executed asynchronously in a coroutine.
         // Dispatchers.IO is a special thread for network operations
-        val invoicesList = networkRepository.getAllInvoices()
+        val invoicesList = networkRepository.getAllInvoices(_environment)
         refreshLocalDb(invoicesList.map { it.asInvoiceEntity() })
     }
 

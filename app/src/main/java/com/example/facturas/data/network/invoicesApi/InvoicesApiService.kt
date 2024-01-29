@@ -1,18 +1,15 @@
 package com.example.facturas.data.network.invoicesApi
 
-import android.content.res.AssetManager
 import co.infinum.retromock.NonEmptyBodyFactory
 import co.infinum.retromock.Retromock
 import co.infinum.retromock.meta.Mock
 import co.infinum.retromock.meta.MockBehavior
 import co.infinum.retromock.meta.MockCircular
-import co.infinum.retromock.meta.MockRandom
 import co.infinum.retromock.meta.MockResponse
 import co.infinum.retromock.meta.MockResponses
 import com.example.facturas.data.network.invoicesApi.models.InvoicesListResponse
 import com.example.facturas.utils.AppEnvironment
 import com.example.facturas.utils.BASE_URL
-import com.example.facturas.utils.ENVIRONMENT
 import com.example.facturas.utils.ResourceBodyFactory
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -36,7 +33,7 @@ interface IInvoicesMockApi : IInvoicesApi {
         MockResponse(body = "mock_invoices_current_list.json"),
         MockResponse(body = "mock_invoices_paid_list.json")
     )
-    @MockRandom
+    @MockCircular
     @MockBehavior(durationDeviation = 1000, durationMillis = 1000)
     @GET("/")
     override suspend fun getAllInvoices(): Response<InvoicesListResponse>
@@ -45,31 +42,41 @@ interface IInvoicesMockApi : IInvoicesApi {
 /**
  * This class is responsible for interacting with REST HTTP URL
  */
-class InvoicesApiService(
-    private val assetManager: AssetManager,
-    private val environment: String = ENVIRONMENT
-) {
-    val api: IInvoicesApi
+class InvoicesApiService private constructor() {
 
-    init {
-        // Instantiate retrofit
-        val retrofit = getRetrofitInstance()
-        api = if (environment == AppEnvironment.MOCK_ENVIRONMENT) {
-            // Instantiate retromock
-            val retromock = getRetromockInstance(assetManager)
-            retromock.create(IInvoicesMockApi::class.java)
+    companion object {
+        private var _INSTANCE: InvoicesApiService? = null
+        lateinit var retrofit: IInvoicesProdApi
+        lateinit var retromock: IInvoicesMockApi
+
+        fun getInstance(): InvoicesApiService {
+            return if (_INSTANCE == null) {
+                // Instantiate retrofit
+                val _retrofit = getRetrofitInstance()
+                // Instantiate retromock
+                val _retromock = getRetromockInstance()
+                retrofit = _retrofit.create(IInvoicesProdApi::class.java)
+                retromock = _retromock.create(IInvoicesMockApi::class.java)
+                InvoicesApiService()
+            } else {
+                requireNotNull(_INSTANCE)
+            }
+        }
+
+        private fun getRetrofitInstance(): Retrofit =
+            Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+        private fun getRetromockInstance(): Retromock =
+            Retromock.Builder().retrofit(getRetrofitInstance())
+                .defaultBodyFactory(NonEmptyBodyFactory(ResourceBodyFactory())).build()
+    }
+
+    suspend fun getAllInvoices(environment: String): Response<InvoicesListResponse> {
+        return if (environment == AppEnvironment.MOCK_ENVIRONMENT) {
+            retromock.getAllInvoices()
         } else {
-            retrofit.create(IInvoicesProdApi::class.java)
+            retrofit.getAllInvoices()
         }
     }
 }
-
-private fun getRetrofitInstance(): Retrofit = Retrofit.Builder()
-    .baseUrl(BASE_URL)
-    .addConverterFactory(GsonConverterFactory.create())
-    .build()
-
-private fun getRetromockInstance(assetManager: AssetManager): Retromock = Retromock.Builder()
-    .retrofit(getRetrofitInstance())
-    .defaultBodyFactory(NonEmptyBodyFactory(ResourceBodyFactory(assetManager)))
-    .build()

@@ -5,13 +5,11 @@ import co.infinum.retromock.BodyFactory
 import java.io.IOException
 import java.io.InputStream
 
-class ResourceBodyFactory(
-    private val assetManager: AssetManager
-) : BodyFactory {
+class ResourceBodyFactory: BodyFactory {
 
     @Throws(IOException::class)
     override fun create(input: String): InputStream {
-        return assetManager.open(input)
+        return App.context.assets.open(input)
     }
 
 }

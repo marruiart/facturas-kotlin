@@ -27,16 +27,13 @@ class InvoicesViewModel : ViewModel() {
         get() = _filteredInvoices.asStateFlow()
 
     fun initRepository() {
-        setRepository(ENVIRONMENT)
-    }
-
-    fun setRepository(environment: String) {
-        repository = getRepositoryInstance(environment)
+        repository = InvoicesRepository.getInstance()
         populateListData()
     }
 
-    private fun getRepositoryInstance(environment: String): InvoicesRepository {
-        return InvoicesRepository.getInstance(environment)
+    fun changeEnvironment(environment: String) {
+        repository.setEnvironment(environment)
+        populateListData()
     }
 
     private fun populateListData() {
