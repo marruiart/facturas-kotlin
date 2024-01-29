@@ -17,16 +17,14 @@ import com.example.facturas.R
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.databinding.FragmentInvoicesListBinding
 import com.example.facturas.ui.adapters.InvoicesListAdapter
-import com.example.facturas.ui.viewmodels.InvoicesListViewModel
+import com.example.facturas.ui.viewmodels.InvoicesViewModel
 import com.example.facturas.utils.AppEnvironment
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.launch
-import kotlin.math.ceil
-import kotlin.math.floor
 
 class InvoicesListFragment : Fragment() {
     private lateinit var binding: FragmentInvoicesListBinding
-    private val viewModel: InvoicesListViewModel by activityViewModels()
+    private val viewModel: InvoicesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -51,7 +49,7 @@ class InvoicesListFragment : Fragment() {
     }
 
     private fun bindView() {
-        val adapter = InvoicesListAdapter(::onInvoiceClick, viewModel.appContext)
+        val adapter = InvoicesListAdapter(::onInvoiceClick)
         setEnvironmentSwitchListener()
         setRecyclerViewAdapter(adapter)
         populateInvoicesList(adapter)

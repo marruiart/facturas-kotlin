@@ -30,14 +30,6 @@ data class Filter(
     }
 }
 
-data class StateCheckboxes(
-    var paid: Boolean = false,
-    var cancelled: Boolean = false,
-    var fixedFee: Boolean = false,
-    var pending: Boolean = false,
-    var paymentPlan: Boolean = false
-)
-
 data class Range(
     var min: Float = 1.0f, var max: Float = 100.0f
 )

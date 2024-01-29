@@ -1,8 +1,8 @@
 package com.example.facturas.data.network.invoicesApi.models
 
 import com.example.facturas.R
+import com.example.facturas.utils.Dates
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 data class InvoiceResponse(
     val descEstado: String,
@@ -10,10 +10,9 @@ data class InvoiceResponse(
     val importeOrdenacion: Float
 ) {
     fun asApiModel(): InvoiceApiModel {
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         return InvoiceApiModel(
             getTranslatedState(descEstado),
-            LocalDate.parse(fecha, formatter),
+            LocalDate.parse(fecha, Dates.FORMATTER),
             importeOrdenacion
         )
     }

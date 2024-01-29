@@ -1,6 +1,5 @@
 package com.example.facturas.data.appRepository
 
-import android.content.Context
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.data.local.InvoicesDatabase
 import com.example.facturas.data.local.LocalDbRepository
@@ -25,12 +24,10 @@ class InvoicesRepository private constructor(
     companion object {
         private var _INSTANCE: InvoicesRepository? = null
 
-        fun getInstance(
-            context: Context, environment: String = ENVIRONMENT
-        ): InvoicesRepository {
+        fun getInstance(environment: String = ENVIRONMENT): InvoicesRepository {
             return _INSTANCE ?: InvoicesRepository(
-                NetworkRepository.getInstance(context.assets, environment),
-                LocalDbRepository(InvoicesDatabase.getInstance(context).invoicesDao())
+                NetworkRepository.getInstance(environment),
+                LocalDbRepository(InvoicesDatabase.getInstance().invoicesDao())
             )
         }
     }

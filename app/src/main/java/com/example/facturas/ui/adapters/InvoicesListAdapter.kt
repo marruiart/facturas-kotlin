@@ -1,6 +1,5 @@
 package com.example.facturas.ui.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,24 +7,23 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.facturas.data.appRepository.models.InvoiceVO
 import com.example.facturas.databinding.InvoicesListItemBinding
-import java.time.format.DateTimeFormatter
+import com.example.facturas.utils.App
+import com.example.facturas.utils.Dates
 
 class InvoicesListAdapter(
-    private val onInvoiceClick: ((invoice: InvoiceVO) -> Unit),
-    private val appContext: Context
+    private val onInvoiceClick: ((invoice: InvoiceVO) -> Unit)
 ) : ListAdapter<InvoiceVO, InvoicesListAdapter.InvoicesListViewHolder>(InvoiceDiffCallBack()) {
 
     inner class InvoicesListViewHolder(private val binding: InvoicesListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         private val item = binding.invoiceItem
         private val amount = binding.itemAmount
         private val date = binding.itemDate
         private val state = binding.itemState
 
         fun bindView(invoice: InvoiceVO) {
-            date.text = invoice.date.format(formatter)
-            state.text = appContext.getString(invoice.stateResource)
+            date.text = invoice.date.format(Dates.FORMATTER)
+            state.text = App.applicationContext.getString(invoice.stateResource)
             amount.text = invoice.amount.toString()
             item.setOnClickListener {
                 onInvoiceClick(invoice)

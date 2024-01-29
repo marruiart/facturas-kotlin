@@ -1,7 +1,6 @@
 package com.example.facturas.ui.viewmodels
 
 import android.accounts.NetworkErrorException
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +17,7 @@ import java.io.IOException
 import kotlin.math.ceil
 import kotlin.math.floor
 
-class InvoicesListViewModel : ViewModel() {
+class InvoicesViewModel : ViewModel() {
 
     private lateinit var repository: InvoicesRepository
     var filter = FilterService.filter
@@ -26,7 +25,6 @@ class InvoicesListViewModel : ViewModel() {
     private var _filteredInvoices: MutableStateFlow<List<InvoiceVO>> = MutableStateFlow(emptyList())
     val invoices: StateFlow<List<InvoiceVO>>
         get() = _filteredInvoices.asStateFlow()
-    lateinit var appContext: Context
 
     fun initRepository() {
         setRepository(ENVIRONMENT)
@@ -38,7 +36,7 @@ class InvoicesListViewModel : ViewModel() {
     }
 
     private fun getRepositoryInstance(environment: String): InvoicesRepository {
-        return InvoicesRepository.getInstance(appContext.applicationContext, environment)
+        return InvoicesRepository.getInstance(environment)
     }
 
     private fun populateListData() {

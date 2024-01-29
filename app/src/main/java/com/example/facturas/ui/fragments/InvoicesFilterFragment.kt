@@ -13,7 +13,7 @@ import com.example.facturas.R
 import com.example.facturas.databinding.FragmentInvoicesFilterBinding
 import com.example.facturas.services.models.Filter
 import com.example.facturas.services.models.Range
-import com.example.facturas.ui.viewmodels.InvoicesListViewModel
+import com.example.facturas.ui.viewmodels.InvoicesViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -29,7 +29,7 @@ import kotlin.math.floor
 
 class InvoicesFilterFragment : Fragment() {
     private lateinit var binding: FragmentInvoicesFilterBinding
-    private val viewModel: InvoicesListViewModel by activityViewModels()
+    private val viewModel: InvoicesViewModel by activityViewModels()
     private lateinit var tmpFilter: Filter
 
     override fun onCreateView(
