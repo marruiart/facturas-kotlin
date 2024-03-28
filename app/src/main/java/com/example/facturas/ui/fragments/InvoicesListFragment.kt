@@ -74,6 +74,7 @@ class InvoicesListFragment : Fragment() {
     }
 
     private fun populateInvoicesList(adapter: InvoicesListAdapter) {
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.invoices.collect { list ->
                 Log.d("DEBUG LIST", list.toString())

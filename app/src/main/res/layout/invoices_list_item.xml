@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toStartOf="@+id/item_amount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="31 Ago 2020" />
+        tools:text="dd/mm/yyyy" />
 
     <TextView
         android:id="@+id/item_state"
@@ -25,7 +25,7 @@
         app:layout_constraintEnd_toStartOf="@+id/item_amount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_date"
-        tools:text="Pendiente de pago" />
+        tools:text="Estado de factura" />
 
     <TextView
         android:id="@+id/item_amount"
@@ -36,7 +36,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/item_state"
         app:layout_constraintEnd_toStartOf="@+id/item_chevron"
         app:layout_constraintTop_toTopOf="@+id/item_date"
-        tools:text="54.56 €" />
+        tools:text="999.99 €" />
 
     <ImageView
         android:id="@+id/item_chevron"

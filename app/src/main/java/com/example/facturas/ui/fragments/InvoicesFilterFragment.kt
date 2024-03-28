@@ -160,7 +160,7 @@ class InvoicesFilterFragment : Fragment() {
 
         binding.minRange.text = getString(R.string.invoices_filter_amount_range, min.toInt())
         binding.maxRange.text = getString(R.string.invoices_filter_amount_range, max.toInt())
-        binding.amountSlider.valueFrom = min
+        binding.amountSlider.valueFrom = 0f
         binding.amountSlider.valueTo = max
         setMiddleAmountsLayout(selectedMin.toInt(), selectedMax.toInt())
         binding.amountSlider.setValues(selectedMin, selectedMax)
